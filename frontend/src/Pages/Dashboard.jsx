@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { Search, PlusCircle, CheckCircle, ClipboardList, Clock, Edit, Trash2 } from "lucide-react";
 
 const priorities = ["Low", "Medium", "High"];
 const API_URL = "http://localhost:3000/tasks";
@@ -21,7 +22,6 @@ export default function Dashboard() {
     }).catch(console.error);
   }, []);
 
-  // 🕒 Timer updates every 1 minute
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -40,7 +40,7 @@ export default function Dashboard() {
         }
       });
       setTimeLeft(updated);
-    }, 60000); // update every minute
+    }, 60000);
     return () => clearInterval(interval);
   }, [tasks]);
 
@@ -50,18 +50,15 @@ export default function Dashboard() {
     return { total, completed, pending: total - completed };
   }, [tasks]);
 
-  // 🔽 Sorting: High priority first, then by less remaining time
   const filteredTasks = useMemo(() => {
     const priorityOrder = { High: 1, Medium: 2, Low: 3 };
     return tasks
       .filter(task => (filter === "completed" ? task.completed : filter === "pending" ? !task.completed : true))
       .filter(task => task.title.toLowerCase().includes(search.toLowerCase()) || task.description.toLowerCase().includes(search.toLowerCase()))
       .sort((a, b) => {
-        // Priority sorting
         if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
           return priorityOrder[a.priority] - priorityOrder[b.priority];
         }
-        // Time sorting
         const aTime = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
         const bTime = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
         return aTime - bTime;
@@ -125,58 +122,92 @@ export default function Dashboard() {
   const handleEditCancel = () => setEditTask({ id: null, title: "", description: "", dueDate: "", priority: "Medium" });
 
   return (
-    <div className="max-w-6xl mx-auto p-4 sm:p-6 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 min-h-screen mt-4">
+    <div className="max-w-7xl mx-auto p-8 bg-gradient-to-br from-gray-100 via-white to-gray-200 min-h-screen mt-4">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+        <h1 className="text-3xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
+          <ClipboardList className="text-indigo-600" size={30} /> Task Dashboard
+        </h1>
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="relative w-full md:w-64">
+            <input
+              type="search"
+              placeholder="Search tasks..."
+              className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+            <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+          </div>
+          <button onClick={handleAddTask} className="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-md transition">
+            <PlusCircle className="mr-2" size={18} /> Add Task
+          </button>
+        </div>
+      </div>
+
       {/* Stats */}
-      <div className="mb-8 flex flex-col sm:flex-row justify-between gap-4 text-lg font-semibold text-gray-700">
-        <span className="bg-pink-100 px-4 py-2 rounded-xl">Total: {stats.total}</span>
-        <span className="bg-green-100 px-4 py-2 rounded-xl">Completed: {stats.completed}</span>
-        <span className="bg-yellow-100 px-4 py-2 rounded-xl">Pending: {stats.pending}</span>
+      <div className="mb-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+        <div className="bg-white flex items-center justify-center gap-3 px-6 py-6 rounded-xl shadow-lg border-l-4 border-indigo-600">
+          <ClipboardList className="text-indigo-600" size={28} />
+          <span className="text-lg font-semibold text-gray-800">Total: {stats.total}</span>
+        </div>
+        <div className="bg-white flex items-center justify-center gap-3 px-6 py-6 rounded-xl shadow-lg border-l-4 border-green-600">
+          <CheckCircle className="text-green-600" size={28} />
+          <span className="text-lg font-semibold text-gray-800">Completed: {stats.completed}</span>
+        </div>
+        <div className="bg-white flex items-center justify-center gap-3 px-6 py-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
+          <Clock className="text-yellow-500" size={28} />
+          <span className="text-lg font-semibold text-gray-800">Pending: {stats.pending}</span>
+        </div>
       </div>
 
       {/* Add Task */}
-      <div className="bg-white p-6 rounded-xl shadow mb-8">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">Add New Task</h2>
+      <div className="bg-white p-6 rounded-xl shadow-lg mb-10 border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 text-gray-900 flex items-center gap-2">
+          <PlusCircle className="text-indigo-600" size={22} /> Add New Task
+        </h2>
         <div className="space-y-3">
-          <input type="text" placeholder="Task title *" className="w-full border rounded px-4 py-2" value={newTask.title} onChange={e => setNewTask({ ...newTask, title: e.target.value })} />
-          <textarea placeholder="Description (optional)" className="w-full border rounded px-4 py-2" rows={3} value={newTask.description} onChange={e => setNewTask({ ...newTask, description: e.target.value })} />
+          <input type="text" placeholder="Task title *" className="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-indigo-500" value={newTask.title} onChange={e => setNewTask({ ...newTask, title: e.target.value })} />
+          <textarea placeholder="Description (optional)" className="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-indigo-500" rows={3} value={newTask.description} onChange={e => setNewTask({ ...newTask, description: e.target.value })} />
           <div className="flex flex-col sm:flex-row gap-4 items-center">
-            <input type="date" className="border rounded px-4 py-2 w-full sm:w-auto" value={newTask.dueDate} onChange={e => setNewTask({ ...newTask, dueDate: e.target.value })} />
-            <select className="border rounded px-4 py-2 w-full sm:w-auto" value={newTask.priority} onChange={e => setNewTask({ ...newTask, priority: e.target.value })}>
+            <input type="date" className="border rounded px-4 py-2 focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto" value={newTask.dueDate} onChange={e => setNewTask({ ...newTask, dueDate: e.target.value })} />
+            <select className="border rounded px-4 py-2 focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto" value={newTask.priority} onChange={e => setNewTask({ ...newTask, priority: e.target.value })}>
               {priorities.map(p => <option key={p} value={p}>{p}</option>)}
             </select>
-            <button onClick={handleAddTask} className="bg-indigo-400 text-white px-5 py-2 rounded-lg hover:bg-indigo-500 transition">Add Task</button>
+            <button onClick={handleAddTask} className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition shadow">
+              <PlusCircle className="inline-block mr-2" size={18} /> Add Task
+            </button>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
         <div className="flex gap-3">
           {["all", "completed", "pending"].map(f => (
-            <button key={f} onClick={() => setFilter(f)} className={`px-4 py-2 rounded-lg ${filter === f ? "bg-indigo-400 text-white" : "bg-gray-200 text-gray-700"}`}>
+            <button key={f} onClick={() => setFilter(f)} className={`px-5 py-2 rounded-lg shadow ${filter === f ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}>
               {f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
           ))}
         </div>
-        <input type="search" placeholder="Search tasks..." className="border rounded px-4 py-2 w-full sm:w-64" value={search} onChange={e => setSearch(e.target.value)} />
       </div>
 
       {/* Task List */}
       <ul className="space-y-4">
         {filteredTasks.length === 0 && <li className="text-center text-gray-500">No tasks found.</li>}
         {filteredTasks.map(task => (
-          <li key={task.id} className={`bg-white p-5 rounded-xl shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-all ${task.completed ? "opacity-50 line-through" : "hover:shadow-lg"}`}>
+          <li key={task.id} className={`bg-white p-5 rounded-xl border border-gray-200 shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-all ${task.completed ? "opacity-70 line-through" : "hover:shadow-lg"}`}>
             <div className="flex items-start gap-4 flex-grow">
-              <input type="checkbox" checked={task.completed} onChange={() => handleToggleComplete(task.id)} className="h-5 w-5 mt-1" />
+              <input type="checkbox" checked={task.completed} onChange={() => handleToggleComplete(task.id)} className="h-5 w-5 mt-1 accent-indigo-600" />
               <div className="flex flex-col w-full">
                 {editTask.id === task.id ? (
                   <>
-                    <input type="text" value={editTask.title} onChange={e => setEditTask({ ...editTask, title: e.target.value })} className="border rounded px-2 py-1 mb-2 w-full" />
-                    <textarea value={editTask.description} onChange={e => setEditTask({ ...editTask, description: e.target.value })} className="border rounded px-2 py-1 mb-2 w-full" rows={2} />
+                    <input type="text" value={editTask.title} onChange={e => setEditTask({ ...editTask, title: e.target.value })} className="border rounded px-2 py-1 mb-2 w-full focus:ring-2 focus:ring-indigo-500" />
+                    <textarea value={editTask.description} onChange={e => setEditTask({ ...editTask, description: e.target.value })} className="border rounded px-2 py-1 mb-2 w-full focus:ring-2 focus:ring-indigo-500" rows={2} />
                   </>
                 ) : (
                   <>
-                    <div className="font-semibold text-lg text-gray-800">{task.title}</div>
+                    <div className="font-semibold text-lg text-gray-900">{task.title}</div>
                     {task.description && <div className="text-gray-600 text-sm">{task.description}</div>}
                   </>
                 )}
@@ -186,20 +217,28 @@ export default function Dashboard() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               {editTask.id === task.id ? (
                 <>
-                  <input type="date" value={editTask.dueDate} onChange={e => setEditTask({ ...editTask, dueDate: e.target.value })} className="border rounded px-2 py-1" />
-                  <select value={editTask.priority} onChange={e => setEditTask({ ...editTask, priority: e.target.value })} className="border rounded px-2 py-1">
+                  <input type="date" value={editTask.dueDate} onChange={e => setEditTask({ ...editTask, dueDate: e.target.value })} className="border rounded px-2 py-1 focus:ring-2 focus:ring-indigo-500" />
+                  <select value={editTask.priority} onChange={e => setEditTask({ ...editTask, priority: e.target.value })} className="border rounded px-2 py-1 focus:ring-2 focus:ring-indigo-500">
                     {priorities.map(p => <option key={p} value={p}>{p}</option>)}
                   </select>
-                  <button onClick={handleEditSave} className="bg-green-400 text-white px-3 py-1 rounded hover:bg-green-500 transition">Save</button>
-                  <button onClick={handleEditCancel} className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500 transition">Cancel</button>
+                  <button onClick={handleEditSave} className="flex items-center bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition shadow">
+                    <CheckCircle size={16} className="mr-1" /> Save
+                  </button>
+                  <button onClick={handleEditCancel} className="flex items-center bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 transition shadow">
+                    Cancel
+                  </button>
                 </>
               ) : (
                 <>
                   <div className="text-sm text-gray-700">Due: {task.dueDate || "No due date"}</div>
-                  <div className="text-sm text-purple-700 font-medium">⏳ {timeLeft[task.id] || "Calculating..."}</div>
-                  <div className={`px-3 py-1 rounded text-white text-sm ${task.priority === "High" ? "bg-red-400" : task.priority === "Medium" ? "bg-yellow-300 text-gray-900" : "bg-green-300 text-gray-900"}`}>{task.priority}</div>
-                  <button onClick={() => handleEditStart(task)} className="bg-indigo-400 text-white px-3 py-1 rounded hover:bg-indigo-500 transition">Edit</button>
-                  <button onClick={() => handleDelete(task.id)} className="bg-red-400 text-white px-3 py-1 rounded hover:bg-red-500 transition">Delete</button>
+                  <div className="text-sm text-indigo-600 font-medium">⏳ {timeLeft[task.id] || "Calculating..."}</div>
+                  <div className={`px-3 py-1 rounded text-white text-sm shadow ${task.priority === "High" ? "bg-red-600" : task.priority === "Medium" ? "bg-yellow-500 text-gray-900" : "bg-green-500 text-gray-900"}`}>{task.priority}</div>
+                  <button onClick={() => handleEditStart(task)} className="flex items-center bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition shadow">
+                    <Edit size={16} className="mr-1" /> Edit
+                  </button>
+                  <button onClick={() => handleDelete(task.id)} className="flex items-center bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition shadow">
+                    <Trash2 size={16} className="mr-1" /> Delete
+                  </button>
                 </>
               )}
             </div>

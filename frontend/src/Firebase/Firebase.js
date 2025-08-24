@@ -12,7 +12,8 @@ const firebaseConfig = {
   storageBucket: "task-manager-refined1.firebasestorage.app",
   messagingSenderId: "720346456561",
   appId: "1:720346456561:web:2b09a95486e867933ea450"
-}
+};
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app)

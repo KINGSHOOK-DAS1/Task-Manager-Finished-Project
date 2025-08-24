@@ -8,7 +8,7 @@ function Login() {
 
   const { login, googleSignIn } = useAuth();
 
-  const handleLogin = async (e) => {
+  const handleLogin = async(e) => {
     e.preventDefault();
     try {
       await login(email, password);
@@ -33,7 +33,7 @@ function Login() {
         {/* Left Side - Info Section */}
         <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 flex-col justify-center items-start p-10">
           <h2 className="text-3xl font-bold text-indigo-700 mb-4">
-            Welcome Back 👋
+            Welcome Back 🙏🏻
           </h2>
           <p className="text-gray-700 mb-6">
             Log in to your Task Manager and stay on top of your goals. Manage
