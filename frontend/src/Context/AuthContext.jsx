@@ -5,9 +5,10 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
-  GoogleAuthProvider
-} from "firebase/auth";  // ✅ lowercase 'firebase'
-import { auth } from "../firebase/firebase"; // ✅ match folder/file name
+  GoogleAuthProvider,
+  getIdToken, // 🆕 to get Firebase JWT token
+} from "firebase/auth";
+import { auth } from "../firebase/firebase";
 
 const AuthContext = createContext();
 
@@ -15,6 +16,8 @@ export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [token, setToken] = useState(null); // 🆕 Store JWT for backend auth
+  const [loading, setLoading] = useState(true);
 
   // Signup with email & password
   const signup = (email, password) =>
@@ -24,28 +27,47 @@ export function AuthProvider({ children }) {
   const login = (email, password) =>
     signInWithEmailAndPassword(auth, email, password);
 
-  // Logout
-  const logout = () => signOut(auth);
-
   // Google Sign-in
   const googleSignIn = () => {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(auth, provider);
   };
 
-  // Track current user
+  // Logout
+  const logout = async () => {
+    await signOut(auth);
+    setCurrentUser(null);
+    setToken(null);
+  };
+
+  // Track current user & get Firebase token
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setCurrentUser(user);
+        const idToken = await user.getIdToken(); // 🆕 get Firebase token
+        setToken(idToken);
+      } else {
+        setCurrentUser(null);
+        setToken(null);
+      }
+      setLoading(false);
     });
     return () => unsub();
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, signup, login, logout, googleSignIn }}
+      value={{
+        currentUser,
+        token, // 🆕 exposed to frontend (use for authenticated API calls)
+        signup,
+        login,
+        logout,
+        googleSignIn,
+      }}
     >
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 }

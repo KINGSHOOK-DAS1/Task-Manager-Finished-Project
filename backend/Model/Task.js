@@ -21,7 +21,17 @@ const taskSchema = new mongoose.Schema({
         type:String,
         enum:['Low','Medium','High'],
         default:'Medium'
+    },
+    reminder: {
+        time: { type: Date },       // When to remind
+        enabled: { type: Boolean, default: false }  // Whether reminder is active
+    },
+    userId: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
+        default: null
     }
+  
 },{timestamps:true}) 
 
 
