@@ -1,7 +1,14 @@
 const Task = require('../Model/Task');
 const mongoose = require('mongoose');
 
-const getTasks = async (req, res, next) => { try { const tasks = await Task.find().sort({ createdAt: -1 }); res.status(200).json({ result: "success", data: tasks }); } catch (error) { res.status(500).json({ result: "error", message: 'Server Error', error: error.message }); } };
+const getTasks = async (req, res, next) => 
+    { try { const tasks = await Task.find().sort({ createdAt: -1 }); 
+    res.status(200).json({ result: "success", data: tasks }); 
+    } catch (error) 
+    { res.status(500).json({ result: "error", message: 'Server Error', error: error.message }); } };
+
+
+
 const createTask = async (req, res, next) => {
     try {
         const { title, description, dueDate, priority, completed, reminder } = req.body;

@@ -36,7 +36,7 @@ function Login() {
             Welcome Back 🙏🏻
           </h2>
           <p className="text-gray-700 mb-6">
-            Log in to your Task Manager and stay on top of your goals. Manage
+            Log in to your Task-Verse and stay on top of your goals. Manage
             tasks efficiently, track progress, and never miss a deadline.
           </p>
           <ul className="space-y-3 text-gray-600">

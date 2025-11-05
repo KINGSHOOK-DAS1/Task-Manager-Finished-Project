@@ -8,10 +8,10 @@ function Home() {
         {/* Left Section - Introduction */}
         <div className="space-y-6">
           <h1 className="text-4xl font-bold text-blue-800 leading-tight">
-            Welcome to Task-Manager
+            Welcome to Task-Verse
           </h1>
           <p className="text-lg text-gray-700">
-            Task-Manager is your all-in-one solution for organizing, tracking, 
+            Task-Verse is your all-in-one solution for organizing, tracking, 
             and completing your daily tasks efficiently. Our goal is to help 
             you stay productive, meet deadlines, and reduce stress by keeping 
             everything in one place.

@@ -9,7 +9,7 @@ function Navbar() {
       <div className="bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 text-gray-800 p-4 flex flex-col sm:flex-row justify-between items-center shadow-md">
         {/* Logo / Title */}
         <div className="text-xl font-bold text-indigo-600 mb-2 sm:mb-0">
-          Task Manager
+          Task-Verse
         </div>
 
         {/* Navigation Links */}
