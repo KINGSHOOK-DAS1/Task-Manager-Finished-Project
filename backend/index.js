@@ -25,7 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/tasks', taskRoutes)
+app.use('/api/tasks', taskRoutes)
 
 app.get('/', (req,res) => {
     res.send("Task manager api is working")
