@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const priorities = ["Low", "Medium", "High"];
-const API_URL = "https://task-manager-finished-project-w57q.vercel.app/api/tasks";
+const API_URL = "https://task-manager-finished-project-dqnz.vercel.app/api/tasks";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
