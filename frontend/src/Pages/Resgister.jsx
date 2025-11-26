@@ -22,7 +22,7 @@ function Register() {
         
         {/* Left Side Info Section */}
         <div className="hidden md:flex flex-col justify-center bg-gradient-to-br from-green-700 to-emerald-800 text-white p-8 md:w-1/2">
-          <h2 className="text-2xl font-bold mb-4">Welcome to Our Platform</h2>
+          <h2 className="text-2xl font-bold mb-4">Welcome to Task-Verse</h2>
           <p className="text-sm mb-6 leading-relaxed">
             Follow the guidelines below to register your account successfully.
           </p>

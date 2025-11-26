@@ -24,7 +24,7 @@ function Home() {
           </ul>
           <p className="text-gray-700">
             Whether you're a student, professional, or business team, 
-            Task-Manager adapts to your workflow and makes managing tasks 
+            Task-Verse adapts to your workflow and makes managing tasks 
             seamless and professional.
           </p>
         </div>
@@ -34,7 +34,7 @@ function Home() {
           <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <h3 className="text-xl font-semibold text-blue-700">Why Choose Us?</h3>
             <p className="text-gray-600 mt-2">
-              With an intuitive interface and smart features, Task-Manager 
+              With an intuitive interface and smart features, Task-Verse 
               ensures that you never miss an important task or deadline.
             </p>
           </div>
